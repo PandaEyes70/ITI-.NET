@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>StudentPortalConsole</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Session 13 — first session requiring Entity Framework Core.
+
+    SqlServer : the EF Core provider that speaks to SQL Server.
+    Design    : required by Add-Migration / Update-Database to build the
+                model at design time. Without it, Add-Migration fails
+                with "Unable to create an object of type 'DbContext'".
+    Tools     : provides the Package Manager Console commands themselves
+                (Add-Migration, Update-Database, Remove-Migration).
+
+    All three are already referenced so the project is day-ready
+    (Rule 39) — nobody installs packages during the lecture.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
