@@ -1,0 +1,35 @@
+@model List<Student>
+@*
+    Views/Students/Index.cshtml — PRE-TYPED, NOT TODAY'S TOPIC.
+    Views are Session 18. This page exists so the route you build in
+    TODO 2 has somewhere to land. Read it if you like; you are not
+    expected to write it today.
+*@
+@{
+    ViewData["Title"] = "Students";
+}
+
+<h1 class="display-5">All Students</h1>
+<p class="lead">Reached through the route pattern <code>students</code>.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Year</th>
+            <th>GPA</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td><a href="/students/@student.Id">@student.FullName</a></td>
+                <td>@student.YearOfStudy</td>
+                <td>@student.Gpa.ToString("F2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
