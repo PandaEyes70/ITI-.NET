@@ -83,7 +83,7 @@ Build Number: 317
 
 ----------------------------------------------------------------------------------------------------
 PART A — Scaffold the Web Project
-* The app opens on: http://localhost:5114 (HTTP) / https://localhost:7037 (HTTPS)
+* The app opens on: https://localhost:7037 (HTTPS)
 * Port configuration found in: Properties/launchSettings.json
 
 ----------------------------------------------------------------------------------------------------
@@ -118,15 +118,15 @@ Stamps Table:
 +----------------+------------+------------+
 | Load / Refresh |  Stamp A   |  Stamp B   |
 +----------------+------------+------------+
-| First Load     |  8b3f1e94  |  8b3f1e94  |
-| Second Load    |  c47d2b8a  |  c47d2b8a  |
+| First Load     |  3e353823  |  3e353823  |
+| Second Load    |  a9ef2808  |  a9ef2808  |
 +----------------+------------+------------+
 
 * Why did Stamp A and B match? Scoped lifetime resolves a single instance per request.
 * Why did they change between refreshes? A new refresh is a new request, which creates a new scope and instance.
 * Neighbor comparison:
-  - Transient (mod 3 = 0): Stamps did not match within the same load.
-  - Singleton (mod 3 = 2): Stamps matched and remained identical across refreshes.
+  - Transient : Stamps did not match within the same load.
+  - Singleton : Stamps matched and remained identical across refreshes.
 
 ----------------------------------------------------------------------------------------------------
 PART F — The Pipeline, Observed
