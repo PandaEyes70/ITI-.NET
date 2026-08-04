@@ -104,7 +104,7 @@ PART C — Wire the Real Context Through DI
 * Roster count matches SELECT COUNT(*) FROM Students exactly.
 
 ----------------------------------------------------------------------------------------------------
-PART D — Break It On Purpose
+PART D — Break It On Purpose 
 D.2: Throws System.InvalidOperationException: "Unable to resolve service for type 'Lab15_StudentPortalWeb.Models.StudentPortalContext' while attempting to activate 'Lab15_StudentPortalWeb.Controllers.HomeController'."
 D.5: Serves the page normally, no crash on startup or requests.
 D.6: This is bad news. DbContext is not thread-safe. Concurrent users sharing a Singleton instance will cause data corruption and throw concurrency exceptions.
