@@ -1,22 +1,4 @@
-// =====================================================================
-// StudentPortalContext — CARRIED FORWARD FROM SESSION 15 (Rule 39)
-// ITI Summer Training | Web Development Using .NET | Morning Group
-//
-// This file arrives EXACTLY as Session 15 left it, with both of
-// yesterday's changes already made: the options-accepting constructor is
-// here, and OnConfiguring is gone. The connection string lives in
-// Program.cs now, where the DI container can hand it in.
-//
-// Nothing in this file changes today. Routing is decided before a
-// controller exists, let alone a database connection — today's whole
-// topic happens upstream of everything below.
-//
-// ⚠️ MIGRATION OWNERSHIP — unchanged from Session 15:
-//    The Session 14 CONSOLE project is still the owner of this
-//    database's migrations. This web project deliberately has NO
-//    Migrations/ folder, and nobody runs Add-Migration or Update-Database
-//    from it. Today changes zero schema.
-// =====================================================================
+
 
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
