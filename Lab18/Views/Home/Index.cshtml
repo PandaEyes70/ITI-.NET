@@ -1,0 +1,43 @@
+@model List<Student>
+@*
+    Views/Home/Index.cshtml — CARRIED FORWARD FROM SESSION 15.
+    Unchanged today. This is the page that proved Dependency Injection
+    worked. It still answers "/" through the default route, and it will
+    still answer "/" at the end of today — that is the point.
+*@
+
+@{
+    ViewData["Title"] = "Student Portal — Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Student Portal</h1>
+    <p class="lead">
+        Every row below travelled from SQL Server, through Entity Framework,
+        into a controller that never called <code>new</code>.
+    </p>
+    <p>
+        Today: the same rows, reachable at
+        <a href="/students">/students</a> — an address we design ourselves.
+    </p>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Year</th>
+            <th>GPA</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.FullName</td>
+                <td>@student.YearOfStudy</td>
+                <td>@student.Gpa.ToString("F2")</td>
+            </tr>
+        }
+    </tbody>
+</table>

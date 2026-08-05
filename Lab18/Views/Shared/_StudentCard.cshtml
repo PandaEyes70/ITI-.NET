@@ -1,0 +1,17 @@
+@model Student
+@*
+    LAB 18 — Part C: A second partial view (_StudentCard.cshtml)
+    Question: this partial and _StudentRow.cshtml are both handed one Student. Could one page use both at once? Why or why not?
+    Answer: Yes, a single page can use both partial views at once. They both accept the same model type (Student) but produce completely distinct HTML markup representation shapes (a table row vs. a Bootstrap card), allowing them to co-exist on the same page (e.g. rendering a detailed card of a featured student above a list table).
+*@
+<div class="card" style="width: 18rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <div class="card-body">
+        <h5 class="card-title">@Model.FullName</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Student ID: @Model.Id</h6>
+        <p class="card-text">
+            <strong>Year:</strong> <year-chip for="@Model.YearOfStudy" />
+            <br />
+            <strong>GPA:</strong> <gpa-badge for="@Model.Gpa" />
+        </p>
+    </div>
+</div>

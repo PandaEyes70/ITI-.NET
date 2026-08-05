@@ -1,0 +1,35 @@
+@model List<Student>
+@*
+    Views/Students/ByYear.cshtml — PRE-TYPED, NOT TODAY'S TOPIC.
+*@
+@{
+    ViewData["Title"] = "Students by Year";
+}
+
+<h1 class="display-5">Year @ViewData["Year"] Students</h1>
+<p class="lead">Reached through the route pattern <code>students/year/{year:int:range(1,4)}</code>.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Year</th>
+            <th>GPA</th>
+        </tr>
+    </thead>
+    @*
+      Part B Question: What would have happened if you had written <partial name="_StudentRow" /> with no model attribute?
+      Answer: The partial view would inherit the parent view's model automatically. Here, the parent model is a List<Student>,
+      but _StudentRow.cshtml expects a single Student object as its model,
+      resulting in an InvalidOperationException at runtime due to model type mismatch.
+    *@
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <partial name="_StudentRow" model="student" />
+        }
+    </tbody>
+</table>
+
+<a href="/students">Back to all students</a>

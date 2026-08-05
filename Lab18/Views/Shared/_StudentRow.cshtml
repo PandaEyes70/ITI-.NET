@@ -1,0 +1,29 @@
+@model Student
+@* LAB 18 — Lab ID: 31 | CHIP_YEAR = 4 | CHIP_LABEL = Final *@
+@* 
+    Question: why does Model mean one Student in this file and a whole List<Student> in Index.cshtml?
+    Answer: Because of the @model directive at the top of each file. Index.cshtml declares @model List<Student> which makes its Model property a list collection, while _StudentRow.cshtml declares @model Student which makes its Model property a single student object.
+*@
+
+@*
+WHAT THE BROWSER RECEIVED:
+<span class="badge bg-warning text-dark" title="rendered by saif">Final</span>
+
+SYMPTOMS OF BROKEN STATES:
+- (a) Removing @addTagHelper from _ViewImports.cshtml:
+  Symptom: The browser receives the literal custom tag `<year-chip for="4"></year-chip>` in the HTML page source, which renders as empty text on the screen because the browser does not recognize custom tag elements.
+- (b) Removing output.TagMode = TagMode.StartTagAndEndTag from YearChipTagHelper.cs:
+  Symptom: The browser receives a self-closing span tag `<span class="badge bg-warning text-dark" title="rendered by saif" />` without an end tag, rendering as an empty, invisible badge containing no visible text.
+- (c) Renaming element to yearchip (no hyphen) in YearChipTagHelper.cs and in _StudentRow.cshtml:
+  Symptom: The browser receives the custom tag `<yearchip for="4"></yearchip>` as literal HTML and displays nothing, because Razor fails to recognize the tag as a Tag Helper without the hyphen and bypasses processing.
+
+What all three failures have in common:
+All three failures fail silently and invisibly at compile time and run time (no exceptions are thrown), outputting invalid or unrecognized HTML tags directly to the browser.
+*@
+
+<tr>
+    <td>@Model.Id</td>
+    <td><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.Id">@Model.FullName</a></td>
+    <td><year-chip for="@Model.YearOfStudy" /></td>
+    <td><gpa-badge for="@Model.Gpa" /></td>
+</tr>

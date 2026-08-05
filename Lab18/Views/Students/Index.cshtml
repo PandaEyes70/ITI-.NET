@@ -1,0 +1,169 @@
+@model List<Student>
+@*
+    =====================================================================
+    Views/Students/Index.cshtml — SESSION PROJECT (Rule 20/35/39/40)
+    ITI Summer Training | Web Development Using .NET | Morning Group
+    Session 18 — Views: Razor, Layouts, Partials and Tag Helpers
+
+    ⚠️ THE CONTROLLER DOES NOT CHANGE TODAY. Not one line. Everything
+    today happens on this side of `return View(...)`.
+
+    THIS PROJECT IS DAY-READY (Rule 39). Press F5 right now, before a
+    single TODO is done, and the whole site from Sessions 15-17 works:
+    the roster, the detail pages, the year and honours filters, the
+    search, and the Create form with its validation and its redirect.
+
+    TODAY'S NINE TODOs, AND THE ORDER THE LECTURE VISITS THEM:
+
+      Views/Students/Index.cshtml     TODO 1   Block 1 — Razor: a code
+                                               block and a guard
+      Views/Shared/_Layout.cshtml     TODO 2   Block 2 — a named hole in
+                                               the layout
+      Views/Students/Details.cshtml   TODO 3   Block 2 — a page filling
+                                               that hole
+      Views/Students/Index.cshtml     TODO 4   Block 3 — call the partial
+      Views/Shared/_StudentRow.cshtml TODO 5   Block 3 — build the partial
+      Views/Shared/_StudentRow.cshtml TODO 6   Block 4 — real tag helpers
+                                               instead of a typed URL
+      TagHelpers/GpaBadgeTagHelper.cs TODO 7   Block 5 — YOUR OWN TAG
+                                               HELPER
+      Views/_ViewImports.cshtml       TODO 8   Block 5 — register it
+      Views/Shared/_StudentRow.cshtml TODO 9   Block 5 — use it
+
+    ⚠️ Two files are visited twice (this one, and _StudentRow). That is
+    normal and it is why the map above exists: the numbers still ascend
+    as you read downward inside each file, which is what Rule 40 asks
+    for.
+
+    ⚠️ TODAY CHANGES NO C#, NO SCHEMA, NO MIGRATION, and adds no rows
+    beyond whatever the Create form is used for. The Session 14 console
+    project is still the migration owner.
+    =====================================================================
+*@
+@{
+    ViewData["Title"] = "Students";
+}
+
+@*  Session 17's confirmation banner — unchanged. TempData survives
+    exactly one redirect and is then thrown away, which is why this
+    appears once after saving and never on a refresh.  *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<h1 class="display-5">All Students</h1>
+<p class="lead">Reached through the route pattern <code>students</code>.</p>
+
+@*
+    TODO 1: Two separate additions, both about mixing C# and HTML.
+
+            First, directly below this comment, open a Razor CODE BLOCK —
+            an at-sign followed by an opening curly brace, closed by a
+            matching curly brace — and inside it declare two ordinary
+            local variables from the model: the number of students, and
+            their average grade point average. Use the LINQ methods from
+            Session 12 for both. Nothing inside a code block is printed;
+            it only computes.
+
+   
+Second, below that block, print a one-line summary sentence
+            using those two variables. Print a value by writing an at-sign
+            immediately followed by the variable name, with no space and
+            no braces. Format the average to two decimal places using the
+            same format string Session 14 used in the console.
+
+            ⚠️ Watch the empty-list case. If the roster is empty, asking
+            for an average throws. Guard the whole summary with a Razor
+            `if` — an at-sign followed by the word if — that only prints
+            the sentence when there is at least one student, and prints a
+            short "no students yet" message otherwise.
+*@
+
+@{
+    var studentCount = Model.Count();
+    var averageGpa = Model.Any() ? Model.Average(s => s.Gpa) : 0.0;
+}
+
+@if (studentCount > 0)
+{
+    <p>
+        <strong>@studentCount</strong> students on the roster , average Gpa
+        <strong>@averageGpa.ToString("F2")</strong>
+    </p>
+}
+else
+{
+    <p class="text-muted">No students yet. Add the first one below.</p>
+}
+
+<p><a class="btn btn-primary" asp-controller="Students" asp-action="Create">+ Add a Student</a></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Year</th>
+            <th>GPA</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*
+            TODO 4: (Block 3 — after TODO 5 exists, or the page will
+                    break the moment you save it.)
+                    Replace the ENTIRE loop body below — the four table
+                    cells, not the loop itself — with a single call to
+                    the shared partial view you build in TODO 5. Use the
+                    partial TAG (an HTML-looking element whose name is
+                    the word partial), give it a name attribute holding
+                    the partial's file name WITHOUT its extension and
+                    WITHOUT a leading underscore-path, and a model
+                    attribute holding the loop variable.
+                    Then delete the four cells. If deleting them makes
+                    you nervous, that nervousness is the point of Block 3
+                    and it will be gone in ten minutes.
+        *@
+        @foreach (var student in Model)
+        {
+            @* <tr>
+                <td>@student.Id</td>
+                <td><a href="/students/@student.Id">@student.FullName</a></td>
+                <td>@student.YearOfStudy</td>
+                <td>@student.Gpa.ToString("F2")</td>
+            </tr> *@
+            <partial name="_StudentRow" model="student" />
+        }
+    </tbody>
+</table>
+@*
+    📋 FULL TODO CHECKLIST
+    ---------------------------------------------------------------------
+    Views/Students/Index.cshtml
+      TODO 1: A Razor code block, a printed summary, and an empty guard   [Block 1]
+      TODO 4: Replace the loop body with a call to the partial            [Block 3]
+
+    Views/Shared/_Layout.cshtml
+      TODO 2: Add an optional named section to the layout                 [Block 2]
+
+    Views/Students/Details.cshtml
+      TODO 3: Fill that section from one page only                        [Block 2]
+
+    Views/Shared/_StudentRow.cshtml   (new file)
+      TODO 5: Build the partial: one strongly-typed table row             [Block 3]
+      TODO 6: Swap the typed URL for real tag helpers                     [Block 4]
+      TODO 9: Use your own tag helper in the GPA cell                     [Block 5]
+
+    TagHelpers/GpaBadgeTagHelper.cs
+      TODO 7: Write a tag helper the framework will call                  [Block 5]
+
+    Views/_ViewImports.cshtml
+      TODO 8: Register your tag helper so Razor can see it                [Block 5]
+    ---------------------------------------------------------------------
+
+    (Rule 35 asks for this checklist inside a C# #region. A .cshtml file has
+    no #region — the pre-processor directive is C#-only and Razor would emit
+    it as literal text onto the page. The collapsible #region version lives
+    in TagHelpers/GpaBadgeTagHelper.cs, which IS a C# file; this is the same
+    list in the form this file can legally carry.)
+*@
