@@ -1,0 +1,54 @@
+@model Course
+@*
+    Views/Courses/Details.cshtml — PRE-WRITTEN, NOT TODAY'S TOPIC.
+
+    This page and Views/Students/Details.cshtml show the SAME underlying
+    Enrollment rows, walked from opposite ends. Neither page's markup
+    knows the other page exists — that is the payoff Block 5 names out
+    loud.
+*@
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<h1 class="display-5">@Model.CourseName</h1>
+<p class="lead">Taught by @Model.Instructor.FullName · @Model.Credits credit(s).</p>
+
+<h4>Enrolled Students</h4>
+@if (!Model.Enrollments.Any())
+{
+    <p class="text-muted">No students enrolled yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Enrolled On</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrollment in Model.Enrollments)
+            {
+                <tr>
+                    <td><a asp-controller="Students" asp-action="Details" asp-route-id="@enrollment.Student.Id">@enrollment.Student.FullName</a></td>
+                    <td>@enrollment.EnrollmentDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (enrollment.Grade.HasValue)
+                        {
+                            <gpa-badge for="@enrollment.Grade.Value" />
+                        }
+                        else
+                        {
+                            <span class="badge bg-light text-dark">Not yet graded</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a href="/Courses">Back to all courses</a>

@@ -1,0 +1,23 @@
+@using StudentPortalWeb
+@using StudentPortalWeb.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, StudentPortalWeb
+@*
+    TODO 8: (Block 5 — after TODO 7.) Add one more line below the one
+            above it, in exactly the same shape: the at-sign directive
+            that means "make tag helpers available", a space, an asterisk
+            meaning all of them, a comma, and then the name of the
+            assembly to look in — which for your own tag helper is this
+            project's own name, StudentPortalWeb.
+
+            ⚠️ Read the line already there first. It says: take ALL tag
+            helpers from Microsoft's MVC tag helper assembly. That single
+            line, written by the project template months of course-time
+            ago, is the only reason asp-for and asp-action have ever
+            worked. Nobody in this room has ever looked at it.
+
+            ⚠️ And note WHERE you are typing. This file applies to every
+            view in the project at once — which is why one line here is
+            enough and you do not repeat it in each page. Block 5
+            explains why that also makes it a good place to be careful.
+*@

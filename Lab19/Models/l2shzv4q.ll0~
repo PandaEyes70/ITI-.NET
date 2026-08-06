@@ -1,0 +1,177 @@
+// =====================================================================
+// StudentPortalContext — SESSION PROJECT (Style Guide Rule 20/35/39/40)
+// ITI Summer Training | Web Development Using .NET | Morning Group
+// Session 19 — Models: the Many-to-Many Relationship
+//
+// Student/Course/Instructor and the existing Fluent API are CARRIED
+// FORWARD FROM SESSION 14, real and working (Rule 39). Today adds
+// Enrollment — the associative entity connecting Student and Course.
+//
+// ⚠️ THIS PROJECT DOES NOT OWN MIGRATIONS (Rule 38, unchanged since
+//    Session 15). Before ANY of today's TODOs here will actually run
+//    against a real Enrollments table, the Enrollment entity and its
+//    Fluent API config must ALREADY have been migrated for real, from
+//    the SESSION 14 CONSOLE PROJECT — see its own TODOs 1-2 and the
+//    Instructor Guide's Block 2. This file's job is to describe the
+//    SAME shape a second time, in this project's own separately
+//    compiled assembly, so THIS project's LINQ queries can see it too.
+//    See the 📌 in Block 2 for why one entity has to be typed twice.
+// =====================================================================
+
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace StudentPortalWeb.Models
+{
+    public class Student
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string FullName { get; set; } = "";
+
+        [Range(1,4,ErrorMessage = "Year of study must be between 1 and 4.")]
+        public int YearOfStudy { get; set; }
+
+        [Range(0.0,4.0,ErrorMessage = "GPA must be between 0.0 and 4.0.")]
+        public double Gpa { get; set; }
+
+        // TODO 1 (part one): Add the "many" side of Student's half of
+        //         today's relationship — a list of Enrollment, named
+        //         Enrollments, initialized to a new empty list. The same
+        //         shape as Instructor.Courses from Session 14.
+        public List<Enrollment> Enrollments { get; set; } = new();
+    }
+
+    public class Course
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(150)]
+        public string CourseName { get; set; } = "";
+
+        public int Credits { get; set; }
+
+        public int InstructorId { get; set; }
+
+        public Instructor Instructor { get; set; } = null!;
+
+        // TODO 1 (part two): The same addition, on Course's side. A list
+        //         of Enrollment, named Enrollments, initialized to new().
+        public List<Enrollment> Enrollments { get; set; } = new();
+    }
+
+    public class Instructor
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string FullName { get; set; } = "";
+
+        public int YearsOfExperience { get; set; }
+
+        public List<Course> Courses { get; set; } = new();
+    }
+
+
+
+    // TODO 1 (part three): Declare Enrollment itself, here — after
+    //         Instructor, before the context, the same physical spot as
+    //         the console project (Rule 40: a new entity belongs where
+    //         new entities go). Same seven members, same order, same
+    //         names, byte-identical to the console project's Enrollment,
+    //         because both must describe the exact same real table:
+    //           Id (int) · StudentId (int) · Student (Student, null!) ·
+    //           CourseId (int) · Course (Course, null!) ·
+    //           EnrollmentDate (DateTime) · Grade (double?, with the
+    //           same [Range(0.0, 4.0)] attribute and message as before).
+    
+
+    public class Enrollment
+    {
+        public int Id { get; set; }
+        public int StudentId { get; set; }
+        public Student Student { get; set; } = null!;
+        public int CourseId { get; set; }
+        public Course Course { get; set; } = null!;
+        public DateTime EnrollmentDate { get; set; }
+        [Range(0.0, 4.0, ErrorMessage = "Grade must be between 0.0 and 4.0")]
+        public double? Grade { get; set; }
+    }
+    public class StudentPortalContext : DbContext
+    {
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+
+        // TODO 1 (part four): One more DbSet property, for Enrollment,
+        //         named Enrollments — without it this project cannot
+        //         query the table at all, even though the table itself
+        //         already exists for real by the time you type this
+        //         line (the console project created it).
+        public DbSet<Enrollment> Enrollments { get; set; }
+
+        public StudentPortalContext(DbContextOptions<StudentPortalContext> options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>()
+                .Property(s => s.FullName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Course>()
+                .HasOne(c => c.Instructor)
+                .WithMany(i => i.Courses)
+                .HasForeignKey(c => c.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TODO 2: The SAME three Fluent API statements you wrote in
+            //         the console project's OnModelCreating, word for
+            //         word — two HasOne/WithMany relationships (Student,
+            //         then Course, both DeleteBehavior.Cascade) and one
+            //         composite unique index on (StudentId, CourseId).
+            //         ⚠️ This is not decoration and it is not optional:
+            //         EF Core builds its model separately per DbContext
+            //         TYPE, and StudentPortalWeb.Models.StudentPortalContext
+            //         is a different type living in a different compiled
+            //         assembly than the console project's context of the
+            //         same name — even though they describe the same
+            //         real table. EF's naming CONVENTIONS may still
+            //         partially discover the relationship on their own
+            //         from the StudentId/CourseId + navigation-property
+            //         shape (the same way Course→Instructor worked
+            //         before Session 14 added its own Fluent API) — but
+            //         the unique index is NOT something any convention
+            //         can guess. Skip this and nothing stops a duplicate
+            //         enrollment from THIS project, even though the
+            //         console project's own copy of the same rule still
+            //         protects the raw table — a mismatch you would only
+            //         discover by actually trying it, exactly the kind
+            //         of "compiles, looks fine, quietly isn't" bug this
+            //         course keeps returning to.
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s=>s.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasIndex(e => new { e.StudentId, e.CourseId })
+                .IsUnique();
+
+        }
+    }
+}

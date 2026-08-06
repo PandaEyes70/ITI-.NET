@@ -1,0 +1,61 @@
+@model Enrollment
+@*
+    Views/Enrollments/Create.cshtml — PRE-WRITTEN FOR THE LAB.
+
+    Views are Session 18's taught topic, not this lab's — the lab is
+    graded entirely on EnrollmentsController.cs. This form expects your
+    GET action to supply two lists via ViewData, under these EXACT keys:
+
+      ViewData["Students"]   a List<Student>, ordered by name
+      ViewData["Courses"]    a List<Course>, ordered by name
+
+    The <select> elements below read those two ViewData entries directly.
+    If your dropdowns are empty, that is your GET action, not this file.
+*@
+@{
+    ViewData["Title"] = "Enroll a Student";
+    var students = (List<Student>)ViewData["Students"]!;
+    var courses = (List<Course>)ViewData["Courses"]!;
+}
+
+<h1 class="display-5">Enroll a Student</h1>
+<p class="lead">Links one real Student to one real Course. Everything typed here is sent to the POST version of <code>Create</code>.</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="StudentId" class="form-label">Student</label>
+                <select asp-for="StudentId" class="form-control">
+                    @foreach (var s in students)
+                    {
+                        <option value="@s.Id">@s.FullName</option>
+                    }
+                </select>
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CourseId" class="form-label">Course</label>
+                <select asp-for="CourseId" class="form-control">
+                    @foreach (var c in courses)
+                    {
+                        <option value="@c.Id">@c.CourseName</option>
+                    }
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Grade" class="form-label">Grade (leave blank if not yet graded)</label>
+                <input asp-for="Grade" class="form-control" />
+                <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enroll</button>
+            <a href="/students" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

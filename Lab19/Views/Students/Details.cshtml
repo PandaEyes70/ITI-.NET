@@ -1,0 +1,82 @@
+@model Student
+@*
+    Views/Students/Details.cshtml — PRE-TYPED, NOT TODAY'S TOPIC.
+*@
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<h1 class="display-5">@Model.FullName</h1>
+<p class="lead">Reached through the route pattern <code>students/{id:int}</code>.</p>
+
+<table class="table">
+    <tr><th>Id</th><td>@Model.Id</td></tr>
+    <tr><th>Full Name</th><td>@Model.FullName</td></tr>
+    <tr><th>Year of Study</th><td>@Model.YearOfStudy</td></tr>
+    <tr><th>GPA</th><td>@Model.Gpa.ToString("F2")</td></tr>
+</table>
+
+<h4>Enrolled Courses</h4>
+@if (!Model.Enrollments.Any())
+{
+    <p class="text-muted">Not Enrolled in any Courses yet</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Course<th/>
+                <th>Enrolled On<th/>
+                <th>Grade<th/>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var enrollment in Model.Enrollments)
+            {
+                <tr>
+                    <td>@enrollment.Course.CourseName<td/>
+                    <td>@enrollment.EnrollmentDate.ToString("yyyy-MM-dd")<td/>
+                    <td>
+                        @if (enrollment.Grade.HasValue)
+                        {
+                            <gpa-badge for="@enrollment.Grade.Value" />
+                        }
+                        else
+                        {
+                            <span class="badge bg-light text-dark">Not yet graded</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a href="/students">Back to all students</a>
+
+@*
+    TODO 3: (Block 2.) Fill the layout's named hole, from this page only.
+
+            At the BOTTOM of this file, write an at-sign, the word
+            section, the section's name — matching TODO 2's exactly, with
+            the same capitals — then an opening curly brace, some markup,
+            and a closing brace. Put a short Bootstrap alert inside it
+            saying something true about this page, for example that
+            detail pages are reachable directly by id.
+
+            ⚠️ The name must match exactly. Spell it differently and
+            nothing appears and nothing errors — the layout simply never
+            finds a section by that name, and an optional section that is
+            never supplied renders nothing. Silent, again.
+
+            Then load ANY OTHER page. The alert is absent, because no
+            other page defines the section. One layout, eight pages, and
+            exactly one of them decided to say something extra.
+*@
+@section PageNotes{
+    <div class="alert alert-info">
+        Detail Pages are reachable directly by id - try
+        <code>/students/1</code> through <code>/students/5</code>
+    </div>
+}
